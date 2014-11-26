@@ -57,10 +57,12 @@ ggplot(data, aes(x, y, <other aesthetics>))
 
 This only creates object and would display anything, thus geometric objects should be added.
 
+In other aesthetics argument, we will add already known `colour` and `fill`.
+
 Geometric objects
 =======================================================
 
-Geometric objects called `geoms` decribes of plot you want to produce
+Geometric objects called `geoms` decribe plots you want to produce
 
 - `geom_point()`
 - `geom_line()`
@@ -87,7 +89,7 @@ We assigned object to variable `plot`, now try to print just by typing name of v
 plot
 ```
 
-Adding geometric objects: points
+Adding geometric objects: scatterplot
 ========================================================
 
 To add geometric object to already existing `ggplot` object, we use `+` operator. Let's add points to our plot
@@ -106,9 +108,23 @@ ggplot(diamonds, aes(x = carat, y = price))+geom_point()
 
 ![plot of chunk unnamed-chunk-6](index-figure/unnamed-chunk-6-1.png) 
 
+**TASK:** create new object without asigning to anything as stated above and plot scatterplot of `x` and `z` from our dataset
+
+geom_line
+=========================================================
+
+Let's plot line of first 10 values of `z` and `x`. Since in `ggplot` object we determine what data to select, we can select first 10 values, thus
 
 
+```r
+ggplot(diamonds[1:10], aes(x = z, y = x))+geom_line()
+```
 
+=====================================================
+
+![plot of chunk unnamed-chunk-8](index-figure/unnamed-chunk-8-1.png) 
+
+**TASK:** plot `y` and `x` scatter plot, where color is `J`
 
 
 
