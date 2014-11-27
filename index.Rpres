@@ -14,23 +14,31 @@ Homework solutions to `ggplot2` part 1 homework could be [found here](https://gi
 Motivation of second part
 ========================================================
 
+Just know what your are seeking for...
+
+![Alt text](motivation.gif)
+
+... skills for great visualizations....
+
+
 Plan of workshop
 ========================================================
 
 - `diamonds` data set
 - `ggplot` object
 - `geom` - geometric objects
-- Multiple plots
-- Fill & colour
+- Fill, colour & alpha
 - Facetting
 - Homework
+- What's next?
+
 
 Diamonds dataset
 =======================================================
 
 We will use `diamonds` data set from `ggplot2` library.
 
-Thus when library is loaded, `data.frame` called `diamonds` appears.
+Thus when library is loaded, `data.frame` called `diamonds` appears in environment.
 
 Make this `data.frame` as `data.table` and take a look at first few lines.
 
@@ -46,9 +54,11 @@ ggplot object
 
 Already covered `qplot()` is very powerful tool when plotting quick plots with a single data set. 
 
-If we want to create multilayered plots based on different data sets, then `qplot` is not gonna help.
+If we want to create multilayered plots based on different data sets, then `qplot` is not gonna help. 
 
 Thus firstly we have to create `ggplot` object and then incrementally add new plots with `+` operator.
+
+**PS:** Akwardly, we will not gonna cover multilayered plots yet.
 
 =======================================================
 
@@ -70,8 +80,8 @@ Geometric objects called `geoms` decribe plots you want to produce
 - `geom_point()`
 - `geom_line()`
 - `geom_histogram()`
-- `geom_bar()`
 - `geom_boxplot()`
+- `geom_bar()`
 
 more information could be found on [documentation](http://docs.ggplot2.org/current/).
 
@@ -105,7 +115,7 @@ plot+geom_point()
 ggplot(diamonds, aes(x = carat, y = price))+geom_point()
 ```
 
-**TASK:** create new object without asigning to anything as stated above and plot scatterplot of `x` and `z` from our dataset
+**TASK:** create new object without asigning to new variable as stated above and plot scatterplot of `x` and `z` from our dataset
 
 geom_line
 =========================================================
@@ -122,7 +132,176 @@ ggplot(diamonds[1:10], aes(x = z, y = x))+geom_line()
 ggplot(diamonds[1:10], aes(x = z, y = x))+geom_line()
 ```
 
-**TASK:** plot `y` and `x` scatter plot, where color is `J`
+**TASK:** plot line of `y` and `x`, where color is `J`
+
+
+geom_histogram
+=========================================================
+
+Plotting histogram is very similar, we just specify only one variable of which we want to plot
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(price))+geom_histogram()
+```
+
+
+==========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(price))+geom_histogram()
+```
+
+==========================================================
+
+However, it is still not clear whats happens with kind of wide binwidths. Thus we can specify `binwidth` argument in `geom_histogram()` a value for size of bins.
+
+**TASK:** plot same histogram again, thus this time specifying size of binwidth to 100
+
+geom_boxplot
+==========================================================
+
+Plotting boxplot is similar to histogram, except we have to state X-axis variable. Boxplot of price
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(x = "Price", y = price))+geom_boxplot()
+```
+
+=========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(x = "Price", y = price))+geom_boxplot()
+```
+
+=========================================================
+
+**TASK:** plot boxplot of log of price, change x variable accordingly, then add other transformation "layer" `coord_flip()` using operator `+` and see what happens
+
+However, we usually want boxplots by different classes as already shown using `qplot()`.
+
+**TASK:** plot price boxplots, but by different cuts (variable `cut`)
+
+geom_bar
+========================================================
+
+Let's say we want to bar plot of different cuts. Moreover, let's change axes names. This can be done to X and Y axes respectively with `xlab(label = "X label")` and `ylab(label = "Y label")`
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(x = cut))+geom_bar()+xlab("Diamond Cut")+ylab("Count")
+```
+
+==========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(x = cut))+geom_bar()+xlab("Diamond Cut")+ylab("Count")
+```
+
+Fill & Colour
+=========================================================
+
+Setting fills and colours should be done in aesthetics argument `aes()`. If we have one layer, then it is not important where to state `color` or `fill`, either `ggplot` object or `geom` object. Thus filled barplots
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(x = cut, fill = cut))+geom_bar()+xlab("Diamond Cut")+ylab("Count")
+```
+
+==========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(x = cut, fill = cut))+geom_bar()+xlab("Diamond Cut")+ylab("Count")
+```
+
+**TASK:** move fill by cut aesthetic to `geom_bar` and plot 
+
+Transparency parameter alpha
+========================================================
+
+In some situations plotted scatter plots seems to be dense in whole plot, while it is very dense in some places only. Though, we can determine each point transparency with parameter `alpha`, which accepts values from 0 to 1.
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(x = carat, y = price))+geom_point(alpha=0.1)
+```
+
+========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(x = carat, y = price))+geom_point(alpha=0.1)
+```
+
+**TASK:** plot the same plot but with different `alpha` (default value is 1) and see the differences
+
+Facetting
+========================================================
+
+Facetting is one great feature that one cannot stop using once learned.
+
+Say you have scatter plot of carat and price, as plotted previously. Moreover, there are other categorical features about these values, *eg*, cut or color or any other categorical variable which is in your data.
+
+========================================================
+
+Thus if you want plot it by different colors, you can choose one of either
+
+- Every single plot separately
+- Facetting
+
+Facetting is done adding facet with `facet_grid(facets)`, where `facets` are in form `var1 ~ var2`.
+
+=======================================================
+
+Let's plot previous scatter plot with facets of `color` variable. If we want facetting by one variable, we state other as `.`, thus
+
+```{r, results='hide', eval=FALSE}
+ggplot(diamonds, aes(x = carat, y = price))+geom_point()+facet_grid(.~color)
+```
+
+========================================================
+
+```{r, results='hide', echo=FALSE}
+ggplot(diamonds, aes(x = carat, y = price))+geom_point()+facet_grid(.~color)
+```
+
+**TASK:** change facetting variables order and set `alpha` parameter to 0.5 to the points, which should be coloured by `cut`, moreover change axes names to `Carat` and `Price`
+
+Facetting with two variables
+========================================================
+
+We can also facet by two variables, as mentioned already, setting `facets` argument to `var1 ~ var2`.
+
+**TASK:** Use plot from last task and facet by color and cut, but now color by `clarity`
+
+
+Congrats!
+========================================================
+
+You have just finished basic introductions to data munging and visualizing tools!
+
+![Alt text](happy.gif)
+
+Hope you learned something!
+
+Homework
+========================================================
+
+Keep that party mood for a friday evening, I still got some homework for you.
+
+For these tasks, use the same `diamonds` data set.
+
+**TASK 1:** plot boxplots of colors and facet them by cut type. Additionally set transparency to 0.5 and fill boxplots by colors.
+
+========================================================
+
+**TASK 2:** plot histogram of `x`, fill it by color, then change width of the bin to 0.25 and add names to X and Y axes on your own.
+
+**TASK 3:** plot scatter plots of `depth` and `carats`. Facet these scatter plots by `clarity` and `color`. Change X and Y axes names. Additionally, change tittle of the plot, using `ggtitle(label = "Title")` and set these names as you want. Then select appropiate `alpha` parameter on your own. Finally, color these plots by price and think of what you can see in this plot.
+
+
+What's next?
+========================================================
+
+This should be discussed. However, my suggestions for next two meetings:
+
+- Try to use learned methods in real life situation
+- Take data set and munge it a little
+- Plot data and share insights together
 
 
 
